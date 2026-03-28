@@ -1,6 +1,6 @@
 # Multi-stage build for Finetic
 # Stage 1: Dependencies and build
-FROM node:18-bullseye-slim
+FROM node:18-bullseye-slim AS builder
 
 # Set working directory
 WORKDIR /app
@@ -19,16 +19,16 @@ COPY . .
 RUN npm run build
 
 # Stage 2: Production image
-FROM node:18-alpine AS runner
+FROM node:18-bullseye-slim AS runner
 
 WORKDIR /app
 
-# Install curl for health checks
-RUN apk add --no-cache curl
+# Install curl for health checks (Debian uses apt-get instead of apk)
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 
-# Create a non-root user
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+# Create a non-root user (Debian syntax)
+RUN groupadd --system --gid 1001 nodejs
+RUN useradd --system --uid 1001 --gid 1001 nextjs
 
 # Copy built application from builder stage
 COPY --from=builder /app/public ./public
