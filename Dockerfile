@@ -9,6 +9,10 @@ WORKDIR /app
 COPY package*.json ./
 COPY bun.lock* ./
 
+ENV npm_config_target_arch=arm64
+ENV npm_config_target_platform=linux
+ENV npm_config_target_libc=musl
+
 # Install dependencies
 RUN npm install --ignore-scripts --legacy-peer-deps
 
