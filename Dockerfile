@@ -10,7 +10,7 @@ COPY package*.json ./
 COPY bun.lock* ./
 
 # Install dependencies
-RUN npm ci --only=production --ignore-scripts --legacy-peer-deps
+RUN npm install --omit=dev --ignore-scripts --legacy-peer-deps
 
 # Copy source code
 COPY . .
