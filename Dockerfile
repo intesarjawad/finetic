@@ -1,6 +1,6 @@
 # Multi-stage build for Finetic
 # Stage 1: Dependencies and build
-FROM node:18-alpine AS builder
+FROM node:18-bullseye-slim
 
 # Set working directory
 WORKDIR /app
@@ -8,10 +8,6 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 COPY bun.lock* ./
-
-ENV npm_config_target_arch=arm64
-ENV npm_config_target_platform=linux
-ENV npm_config_target_libc=musl
 
 # Install dependencies
 RUN npm install --ignore-scripts --legacy-peer-deps
